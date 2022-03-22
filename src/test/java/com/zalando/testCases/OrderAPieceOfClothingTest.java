@@ -1,21 +1,36 @@
 package com.zalando.testCases;
 
+import com.codeborne.selenide.Condition;
 import com.zalando.pages.CartPage;
 import com.zalando.pages.MainPage;
 import com.zalando.pages.ProductPage;
 import com.zalando.pages.QueryResultsPage;
+import io.qameta.allure.Description;
+import io.qameta.allure.Severity;
+import io.qameta.allure.SeverityLevel;
+import org.openqa.selenium.By;
+import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
+import java.io.IOException;
+
+import static com.codeborne.selenide.Selenide.*;
 
 public class OrderAPieceOfClothingTest {
 
     @Test
+    @Description("Performs searching for a product using filters and adding it to the cart," +
+            "showing cart's contents using a screenshot")
+    @Severity(value = SeverityLevel.NORMAL)
     public void orderAPieceOfClothing() throws InterruptedException{
 
         MainPage mainPage = new MainPage();
         mainPage.openMainPage();
-        QueryResultsPage queryResultsPage = mainPage.searchForAnItem("jeans");
+        Assert.assertEquals(title(), "Buty i odzież online na Zalando. Moda | darmowa* dostawa i zwrot", "The title of the page is different than expected");
 
+        QueryResultsPage queryResultsPage = mainPage.searchForAnItem("jeans");
+        Assert.assertEquals(title(), "Jeans - Kup online | Katalog | Zalando", "The title is different from the one expected");
 
         queryResultsPage.showClothesForMen();
         queryResultsPage.selectClothingColour("Czarny");
@@ -28,5 +43,10 @@ public class OrderAPieceOfClothingTest {
         CartPage cartPage = productPage.showCartPage();
         cartPage.takeScreenshot();
 
+    }
+
+    @AfterClass
+    public void allureReport() throws IOException {
+        Runtime.getRuntime().exec("allure serve allure-results\n");
     }
 }
