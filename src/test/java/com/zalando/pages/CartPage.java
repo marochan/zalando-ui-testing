@@ -6,10 +6,7 @@ import io.qameta.allure.Step;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 
-import java.sql.Date;
 import java.time.LocalDateTime;
-
-import static com.codeborne.selenide.Selenide.*;
 public class CartPage {
 
     @Step("Take screenshot showing product added to the cart")

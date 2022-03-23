@@ -1,11 +1,11 @@
 package com.zalando.pages;
 
-import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import org.openqa.selenium.By;
-import static com.codeborne.selenide.Selenide.*;
+
+import static com.codeborne.selenide.Selenide.$;
 public class QueryResultsPage {
 
     private SelenideElement menClothesFilterButton;
@@ -19,13 +19,14 @@ public class QueryResultsPage {
     private SelenideElement brandDropDownSave;
 
     private SelenideElement itemToBeSelected;
+
     @Step("Filter clothes to show men clothes only")
     public void showClothesForMen(){
         menClothesFilterButton = $(By.cssSelector("li > a[href$=\"/mezczyzni/\"]"));
         menClothesFilterButton.click();
     }
 
-    @Step("Filter clothing colour to be {0}}")
+    @Step("Filter clothing colour to be: {0}")
     public void selectClothingColour(String colour){
         colourDropDown = $(By.xpath("//button[@aria-label = \"filtruj po Kolor\"]"));
         colourDropDown.click();
@@ -37,8 +38,8 @@ public class QueryResultsPage {
         colourDropDownSave.click();
     }
 
-    @Step("filter clothing brand to be {0}")
-    public void selectClothingBrand(String brand) throws InterruptedException{
+    @Step("filter clothing brand to be: {0}")
+    public void selectClothingBrand(String brand) {
         brandDropDown = $(By.xpath("//button[@aria-label = \"filtruj po Marka\"]"));
         brandDropDown.click();
 
@@ -47,7 +48,6 @@ public class QueryResultsPage {
 
         $(By.cssSelector("label")).shouldHave(Condition.exactText(brand)).click();
 
-        Thread.sleep(4000);
         brandDropDownSave = $(By.xpath("//button[@aria-label = \"dodaj filtr Marka\"]")).scrollIntoView(true);
         brandDropDownSave.click();
     }

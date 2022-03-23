@@ -12,6 +12,7 @@ public class MainPage {
     private final String URL = "https://www.zalando.pl";
     private SelenideElement searchBar;
     private SelenideElement cookiesAcceptance;
+
     @Step("Open the main page")
     public void openMainPage(){
         open(URL);
