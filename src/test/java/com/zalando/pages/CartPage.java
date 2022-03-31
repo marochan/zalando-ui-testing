@@ -6,7 +6,6 @@ import io.qameta.allure.Step;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 
-import java.time.LocalDateTime;
 public class CartPage {
 
     @Step("Take screenshot showing product added to the cart")
@@ -16,7 +15,6 @@ public class CartPage {
 
     @Attachment(value = "Page screenshot", type = "image/png")
     public byte[] getScreenshot(){
-        LocalDateTime date = LocalDateTime.now();
         return ((TakesScreenshot)WebDriverRunner.getWebDriver()).getScreenshotAs(OutputType.BYTES);
     }
 }

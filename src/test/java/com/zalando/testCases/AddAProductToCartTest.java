@@ -1,53 +1,62 @@
 package com.zalando.testCases;
 
-import com.zalando.assertions.Assertions;
+import com.zalando.enums.ClothingTypes;
 import com.zalando.pages.CartPage;
-import com.zalando.pages.MainPage;
+import com.zalando.pages.BasePage;
 import com.zalando.pages.ProductPage;
 import com.zalando.pages.QueryResultsPage;
 import io.qameta.allure.Description;
 import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
-import java.io.IOException;
+import static com.zalando.assertions.Assertions.*;
 
-public class AddAProductToCartTest {
+
+public class AddAProductToCartTest extends BaseTest{
 
     @Test
     @Description("Performs searching for a product using filters and adding it to the cart," +
             "showing cart's contents using a screenshot")
     @Severity(value = SeverityLevel.NORMAL)
-    public void addingProductToCartUsingFilters(){
+    public void addingProductToCartUsingFilters() throws Exception{
+        BasePage basePage = new BasePage();
+        basePage.openBasePage();
 
-        MainPage mainPage = new MainPage();
-        mainPage.openMainPage();
+        basePageAssertions();
 
-        Assertions.mainPageAssertions();
-
-        QueryResultsPage queryResultsPage = mainPage.searchForAnItem("jeans");
+        String clothingType = ClothingTypes.getRandom().toString();
+        QueryResultsPage queryResultsPage = basePage.searchForAnItem(clothingType);
         queryResultsPage.showClothesForMen();
-        queryResultsPage.selectClothingColour("Czarny");
-        queryResultsPage.selectClothingBrand("Lee");
 
-        Assertions.queryResultsPageAssertions();
+        queryResultsPage.clickClothingForm();
+        String colour = QueryResultsPage.getRandomColour();
+        queryResultsPage.selectClothingColour(colour);
 
-        ProductPage productPage = queryResultsPage.selectAProduct("BROOKLYN");
-        Assertions.beforeSelectionAssertions();
-        productPage.selectSize("33x32");
-        productPage.addItemToCart();
+        queryResultsPage.clickBrandForm();
+        String brand = QueryResultsPage.getRandomBrand();
+        queryResultsPage.selectABrand(brand);
 
-        Assertions.afterSelectionAssertions();
+        queryResultsPageAssertions(clothingType);
+
+        ProductPage productPage = queryResultsPage.selectAProduct();
+        beforeSelectionAssertions();
+        boolean isSizesFormAvailable =  productPage.clickOnSizesForm();
+        if(isSizesFormAvailable){
+            productPage.addItemToCart();
+        } else {
+            String size = ProductPage.getRandomSize();
+            productPage.selectSize(size);
+            productPage.addItemToCart();
+        }
+        afterSelectionAssertions();
 
         CartPage cartPage = productPage.showCartPage();
         cartPage.takeScreenshot();
 
-        Assertions.cartAssertions();
+        cartAssertions();
     }
 
-    @AfterClass
-    public void allureReport() throws IOException {
-       Runtime.getRuntime().exec("allure serve allure-results\n");
-    }
+
+
 }
